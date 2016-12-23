@@ -1,0 +1,22 @@
+<ion-header>
+	<ion-navbar>
+		<ion-title>Sign In</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content padding>
+	<form [formGroup]="signinForm" (submit)="onSubmit()">
+		<ion-list>
+			<ion-item>
+				<ion-label class="blue-label">FFA Number</ion-label>
+				<ion-input [(ngModel)]="signin.fFANumber" type="text" id="fFANumber" placeholder="(required)" name="fFANumber" formControlName="fFANumber"
+					placeholder="(required)"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-label class="blue-label">Password</ion-label>
+				<ion-input [(ngModel)]="signin.password" type="password" id="password" placeholder="(required)" name="password" formControlName="password"></ion-input>
+			</ion-item>
+		</ion-list>
+		<button ion-button type="submit" [disabled]="!signinForm.valid" block>Sign In</button>
+	</form>
+</ion-content>

@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>Sessions</ion-title>
+        <ion-buttons *ngIf="sharedService.role==2||sharedService.role==1" end>           
+            <button ion-button (click)="goToCreate()">    
+            NEW
+            </button>
+<!--              <button ion-button (click)="logOut()">
+        <ion-icon name="log-out" item-right></ion-icon> 
+      </button> -->
+        </ion-buttons>
+    </ion-navbar>
+    <!--<ion-searchbar (ionInput)="filter($event)" (ionClear)="onClear()"></ion-searchbar>-->
+    <ion-searchbar (ionInput)="filter($event.target.value)" (ionClear)="onClear()"></ion-searchbar>
+</ion-header>
+
+<ion-content no-padding class="home">
+    <ion-list>
+        <ion-item *ngFor="let session of sessionFiltered" (click)="gotoDetail(session)">
+            <h2>{{ session.sessionKey }}</h2>
+        </ion-item>
+    </ion-list>
+</ion-content>

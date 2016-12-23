@@ -1,0 +1,7 @@
+<ion-item>
+	<img src="{{filesrc}}" />
+	<button ion-button type="button" [hidden]="true" *ngIf="isMobile" class="captureCss" (click)="uploadOrCapture(true)">Capture</button>
+	<button ion-button type="button" [hidden]="true" *ngIf="isMobile" class="uploadCss" (click)="uploadOrCapture(false)">{{buttonCaption}}</button>
+	<input type="file" [hidden]="true" accept="image/*" (change)="onChange($event)" #file>
+	<button ion-button type="button" [hidden]="true" *ngIf="!isMobile" block (click)="file.click()">{{buttonCaption}}</button>
+</ion-item>

@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+		<ion-title>Skills</ion-title>
+        <ion-buttons end>           
+            <button ion-button (click)="goToCreate()">    
+            NEW
+            </button>
+        </ion-buttons>
+	</ion-navbar>
+	<!--<ion-searchbar (ionInput)="filter($event)" (ionClear)="onClear()"></ion-searchbar>-->
+    <ion-searchbar (ionInput)="filter($event.target.value)" (ionClear)="onClear()"></ion-searchbar>
+</ion-header>
+
+<ion-content no-padding class="home">
+    <ion-list>
+        <ion-item *ngFor="let skill of skillFiltered" (click)="gotoDetail(skill)">            
+            <h2>{{ skill.name }} </h2>
+        </ion-item>
+    </ion-list>
+</ion-content>

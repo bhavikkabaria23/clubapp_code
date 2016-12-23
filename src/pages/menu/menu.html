@@ -1,0 +1,94 @@
+<ion-menu id="root" [content]="content">
+ <ion-content>
+  <ion-toolbar>
+<!--     <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button> -->
+    <ion-title>Gofer Pro - Root User</ion-title>
+  </ion-toolbar>
+
+ 
+    <ion-list>    
+      <button ion-item *ngFor="let p of pagesRoot" (click)="openPage(p)">
+        {{p.title}}
+      </button>
+    </ion-list>
+	    <button ion-button full (click)="signOut()">Sign Out</button>
+  </ion-content>
+
+</ion-menu>
+ <ion-menu id="admin" [content]="content">
+  <ion-content>
+    <ion-toolbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Gofer Pro - Administrator</ion-title>
+  </ion-toolbar>
+    <ion-list>    
+      <button ion-item *ngFor="let p of pagesAdmin" (click)="openPage(p)">
+        {{p.title}}
+      </button>
+    </ion-list>
+	    <button ion-button full (click)="signOut()">Sign Out</button>
+  </ion-content>
+
+</ion-menu>
+ <ion-menu id="coach" [content]="content">
+<ion-content>
+  <ion-toolbar>
+      <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Gofer Pro - Coach</ion-title>
+  </ion-toolbar>
+
+  
+    <ion-list>    
+      <button ion-item *ngFor="let p of pagesCoach" (click)="openPage(p)">
+        {{p.title}}
+      </button>
+    </ion-list>
+	    <button ion-button full (click)="signOut()">Sign Out</button>
+  </ion-content>
+
+</ion-menu>
+ <ion-menu id="technicalDirector" [content]="content">
+ <ion-content>
+  <ion-toolbar>
+      <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Gofer Pro - Tech Dir</ion-title>
+  </ion-toolbar>
+
+ 
+    <ion-list>    
+      <button ion-item *ngFor="let p of pagesTechnicalDirector" (click)="openPage(p)">
+        {{p.title}}
+      </button>
+    </ion-list>
+	    <button ion-button full (click)="signOut()">Sign Out</button>
+  </ion-content>
+
+</ion-menu>
+ <ion-menu id="player" [content]="content">
+ <ion-content>
+  <ion-toolbar>
+      <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Gofer Pro - Player</ion-title>
+  </ion-toolbar>
+
+ 
+    <ion-list>    
+      <button ion-item *ngFor="let p of pagesPlayer" (click)="openPage(p)">
+        {{p.title}}
+      </button>
+    </ion-list>
+	    <button ion-button full (click)="signOut()">Sign Out</button>
+  </ion-content>
+
+</ion-menu>
+  <ion-nav #content [root]="rootPage"></ion-nav>

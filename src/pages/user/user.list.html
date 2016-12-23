@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+        <ion-title>Users</ion-title>
+        <ion-buttons end>
+            <!-- 			<button ion-button (click)="logOut()">
+        <ion-icon name="log-out" item-right></ion-icon> 
+      </button> -->
+        </ion-buttons>
+    </ion-navbar>
+    <ion-searchbar (ionInput)="filter($event.target.value)" (ionClear)="onClear()"></ion-searchbar>
+</ion-header>
+
+<ion-content no-padding class="home">
+    <ion-list>
+        <ion-item *ngFor="let user of userFiltered" (click)="gotoDetail(user)">
+            <h2>{{ user.roleName }} </h2>
+            <p>{{ user.fFANumber }}</p>
+        </ion-item>
+    </ion-list>
+</ion-content>

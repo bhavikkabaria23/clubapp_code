@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Sessions</ion-title>
+
+    <ion-buttons right>           
+        <button ion-button (click)="checkSessions()">    
+            Refresh
+        </button>
+    </ion-buttons>  
+    </ion-navbar>
+
+</ion-header>
+
+<ion-content no-padding>
+    <ion-list>
+<!--       <ion-item *ngIf="session">        
+        <ion-datetime [ngModel]="session.startDateTime" displayFormat="DD MMM YYYY, HH:00" disabled>
+        </ion-datetime>
+      </ion-item>  -->
+<!--         <ion-item-divider color="light" *ngIf="session">Players</ion-item-divider>
+        <ion-item *ngFor="let player of playerList" (click)="gotoDetail(player)">
+          <ion-avatar item-left>
+              <img src="{{player.thumbnail}}">
+          </ion-avatar>
+            <h2>{{ player.givenName }} {{ player.familyName }}</h2>
+            <p>{{ player.playerID }}</p>
+            <p>{{ player.fFANumber }}</p>
+
+            <ion-icon name="clipboard" item-right [ngClass]="(player.assessed>0?'assessed':'notassessed')">
+            <span *ngIf="player.assessed>1">{{player.assessed}}</span>
+            </ion-icon>
+
+        </ion-item> -->
+        <!-- <ion-item-divider *ngIf="sessionList.length > 0" color="light">Coming Sessions</ion-item-divider> -->
+        <!-- <ion-item-divider *ngIf="sessionList.length == 0" color="light">No Coming Sessions</ion-item-divider> -->
+        <ion-item *ngFor="let session of sessionList" (click)="gotoDetail(session)">
+            <h2>{{ session.sessionKey }}</h2>
+            <span item-right *ngIf="session.now">Active</span>
+        </ion-item>       
+    </ion-list>
+</ion-content>

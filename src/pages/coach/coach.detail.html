@@ -1,0 +1,91 @@
+<ion-header>
+	<ion-navbar>
+		<button *ngIf="IsMasterPage" ion-button menuToggle>
+			<ion-icon name="menu"></ion-icon>
+    	</button>
+		<ion-title>{{registration.fFANumber}}</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content no-padding>
+
+	<ion-list>
+		<ion-item>
+			<ion-thumbnail item-left>
+				<img src="{{cloudinaryThumbUri}}">
+			</ion-thumbnail>
+			<!--<h2>{{registration.playerName}}</h2>-->
+			<h2 *ngIf="!registration.givenName">{{registration.coachName}}</h2>
+			<h2 *ngIf="registration.givenName">{{ registration.givenName }} {{ registration.familyName }}</h2>
+			<p>{{birthDateString}}</p>
+			<p>{{registration.gender | uppercase}}</p>
+		</ion-item>
+		<ion-item>
+			<button ion-button *ngIf="sharedService.role==1||sharedService.role==4" (click)="AssignToSession()">Assign to Sessions</button>
+			<button ion-button *ngIf="sharedService.role==1||sharedService.role==2||sharedService.role==3" (click)="gotoEdit()">Modify Details</button>
+		</ion-item>
+		<ion-item *ngIf="registration.fFANumber">
+			<ion-label class="blue-label">FFA Number</ion-label>
+			<div item-content>
+				{{registration.fFANumber}}
+			</div>
+		</ion-item>
+
+		<ion-item-divider color="light">{{ registration.givenName }} {{ registration.familyName }} Contact Details</ion-item-divider>
+		<ion-item no-lines>
+			<ion-label class="blue-label">Address</ion-label>
+		</ion-item>
+		<ion-item text-wrap>{{registration.residentialAddress}}</ion-item>
+
+		<ion-item>
+			<ion-label class="blue-label">Home Phone</ion-label>
+			<div item-content>{{registration.homeNumber}}</div>
+		</ion-item>
+		<ion-item>
+			<ion-label class="blue-label">Mobile</ion-label>
+			<div item-content>{{registration.mobileNumber}}</div>
+		</ion-item>
+		<ion-item>
+			<ion-label class="blue-label">E-Mail</ion-label>
+			<div item-content>{{registration.email}}</div>
+		</ion-item>
+
+		<ion-item-divider color="light">Contact Details of Related Party</ion-item-divider>
+		<ion-item>
+			<ion-label class="blue-label">Name</ion-label>
+			<div item-content>{{registration.contact1_personName}}</div>
+		</ion-item>
+		<ion-item>
+			<ion-label class="blue-label">Relationship</ion-label>
+			<div item-content>{{registration.contact1_relationship}}</div>
+		</ion-item>
+		<ion-item>
+			<ion-label class="blue-label">Phone</ion-label>
+			<div item-content>{{registration.contact1_contactNumber}}</div>
+		</ion-item>
+		<ion-item>
+			<ion-label class="blue-label">E-Mail</ion-label>
+			<div item-content>{{registration.contact1_email}}</div>
+		</ion-item>
+
+		<ion-item-divider color="light">Coaching History</ion-item-divider>
+		<ion-item>
+			<ion-label class="blue-label">Previous Club (2016)</ion-label>
+			<div item-content>{{registration.previousClub2016}}</div>
+		</ion-item>
+		<ion-item>
+			<ion-label class="blue-label">Previous Club (2015)</ion-label>
+			<div item-content>{{registration.previousClub2015}}</div>
+		</ion-item>
+		<ion-item>
+			<ion-label class="blue-label">Current Suspensions</ion-label>
+			<div item-content>{{registration.suspensionsDetails}}</div>
+		</ion-item>
+
+		<ion-item-divider *ngIf="registration.sessions && registration.sessions.length > 0" color="light">Sessions</ion-item-divider>
+		<ion-item *ngFor="let session of registration.sessions">
+			<h2>{{ session.sessionKey }}</h2>
+		</ion-item>
+
+	</ion-list>
+</ion-content>

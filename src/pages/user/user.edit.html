@@ -1,0 +1,52 @@
+<ion-header>
+	<ion-navbar>
+		<button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+		<ion-title>Edit User</ion-title>
+<!-- 		<ion-buttons end>
+			<button ion-button (click)="logOut()">
+        <ion-icon name="log-out" item-right></ion-icon> 
+      </button>
+		</ion-buttons> -->
+	</ion-navbar>
+</ion-header>
+
+<ion-content padding>
+	<form [formGroup]="userEditForm" (submit)="onSubmit()">
+		<ion-list>
+			<ion-item>
+				<ion-label class="blue-label">Role</ion-label>
+				<ion-select [(ngModel)]="userEdit.role" name="role" id="role" formControlName="role" placeholder="(required)">
+					<ion-option value=1>Root</ion-option>
+					<ion-option value=2>Admin</ion-option>
+					<ion-option value=3>Coach</ion-option>
+					<ion-option value=4>Technical Director</ion-option>
+					<ion-option value=5>Player </ion-option>
+				</ion-select>
+			</ion-item>			
+			<ion-item>
+				<ion-label class="blue-label">FFA Number</ion-label>
+				<ion-input [(ngModel)]="userEdit.fFANumber" type="text" id="fFANumber" placeholder="(required)" name="fFANumber"
+					formControlName="fFANumber"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-label class="blue-label">Password</ion-label>
+				<ion-input [(ngModel)]="userEdit.password" type="password" id="password" placeholder="(required)" name="password"
+					formControlName="password"></ion-input>
+			</ion-item>
+			<ion-item no-lines>
+				<ion-label class="blue-label">Address</ion-label>
+			</ion-item>
+			<ion-item text-wrap>
+				<ion-input [(ngModel)]="userEdit.address" type="text" id="address" name="address" formControlName="address" placeholder="(required)"></ion-input>
+			</ion-item>
+			<ion-item>
+				<ion-label class="blue-label">Mobile</ion-label>
+				<ion-input [(ngModel)]="userEdit.mobileNumber" type="text" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber"
+					placeholder="(required)"></ion-input>
+			</ion-item>
+		</ion-list>
+		<button ion-button type="submit" [disabled]="!userEditForm.valid" block>Submit</button>
+	</form>
+</ion-content>

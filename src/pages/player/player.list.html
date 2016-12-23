@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+		<ion-title>Players</ion-title>
+	            <ion-buttons *ngIf="selecting" right>
+            <button ion-button (click)="apply()">        
+        Save        
+      </button>
+        </ion-buttons>
+	</ion-navbar>
+	<!--<ion-searchbar (ionInput)="filter($event)" (ionClear)="onClear()"></ion-searchbar>-->
+    <ion-searchbar (ionInput)="filter($event.target.value)" (ionClear)="onClear()"></ion-searchbar>
+</ion-header>
+
+<ion-content no-padding class="home">
+    <ion-list>
+        <ion-item *ngFor="let player of playerFiltered" [class.selected-item]="player.selected" (click)="gotoDetail(player)">
+            <!--<h2>{{ player.playerName }}</h2>-->
+      <ion-avatar item-left>
+          <img src="{{player.thumbnail}}">
+      </ion-avatar>
+                  <h2>{{ player.givenName }} {{ player.familyName }}</h2>
+            <p>{{ player.playerID }}</p>
+        </ion-item>
+    </ion-list>
+</ion-content>

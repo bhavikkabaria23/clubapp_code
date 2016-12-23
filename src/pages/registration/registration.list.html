@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+		<ion-title>Registrations</ion-title>
+
+	</ion-navbar>
+	<!--<ion-searchbar (ionInput)="filter($event)" (ionClear)="onClear()"></ion-searchbar>-->
+  <ion-searchbar (ionInput)="filter($event.target.value)" (ionClear)="onClear()"></ion-searchbar>
+</ion-header>
+
+<ion-content no-padding class="home">
+  <ion-list>
+    <!--<div *ngFor="let reg of registration">
+      <ion-item (click)="toggleDetail(reg)">
+        <ion-icon [name]="isDetailShown(reg) ? 'add' : 'remove'"></ion-icon>
+        &nbsp; {{ reg._id }}
+      </ion-item>
+      <ion-item [hidden]="isDetailShown(reg)">
+        {{(reg.details != undefined)?reg.details:""}}
+      </ion-item>
+    </div>-->
+   <ion-item *ngFor="let reg of registrationFiltered" (click)="gotoDetail(reg)">
+      <ion-avatar item-left>
+          <img src="{{reg.thumbnail}}">
+      </ion-avatar>
+      <h2>{{ reg.playerName }}</h2>
+      <p>{{ reg.playerID }}</p>
+      <!--<ion-icon name="arrow-forward" item-right></ion-icon>-->
+    </ion-item>
+  </ion-list>
+</ion-content>

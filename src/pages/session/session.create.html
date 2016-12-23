@@ -1,0 +1,21 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Create Session</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content no-padding>
+    <form [formGroup]="sessionForm" (submit)="onSubmit()">
+        <ion-list>
+            <ion-item>
+                <ion-label class="blue-label">Session</ion-label>
+                <ion-input [(ngModel)]="session.sessionKey" type="text" placeholder="(required)" id="sessionKey" name="sessionKey" formControlName="sessionKey"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label class="blue-label">Start Date & Time</ion-label> 
+                <ion-datetime [(ngModel)]="session.startDateTime" displayFormat="MMM DD YYYY, HH" placeholder="(required)" id="startDateTime" name="startDateTime" formControlName="startDateTime"> </ion-datetime>
+            </ion-item>
+        </ion-list>
+        <button ion-button type="submit" [disabled]="!sessionForm.valid" block>Submit</button>
+    </form>
+</ion-content>

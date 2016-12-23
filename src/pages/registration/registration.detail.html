@@ -1,0 +1,245 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Gladesville Ryde Magic FC</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="home">
+  <h2>Registration Detail</h2>
+
+  <ion-fab top right edge>
+    <button (click)="takePhoto()" ion-fab mini><ion-icon name="camera"></ion-icon></button>
+  </ion-fab>
+
+  <img [src]="base64Image" *ngIf="base64Image" />
+  <button ion-button block *ngIf="base64Image" (click)="savePhoto()">Save Photo</button>
+
+  <img [src]="cloudinaryImageUri" *ngIf="cloudinaryImageUri" />
+
+  <form [formGroup]="registrationForm" (submit)="onSubmit()">
+    <ion-list>
+      <ion-item>
+        <ion-label class="blue-label">Player ID</ion-label>
+        <div item-content>{{registration.playerID}}</div>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="blue-label">Player Name</ion-label>
+        <ion-input [(ngModel)]="registration.playerName" type="text" placeholder="(required)" id="playerName" name="playerName" formControlName="playerName"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="blue-label">FFA Number</ion-label>
+        <ion-input [(ngModel)]="registration.fFANumber" type="text" id="fFANumber" name="fFANumber" formControlName="fFANumber"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="blue-label">Date of Birth</ion-label>
+        <ion-datetime (ionChange)="onChangeDate($event)" [(ngModel)]="registration.birthDate" type="text" max="2009-12-31" id="birthDate"
+          placeholder="(required)" name="birthDate" formControlName="birthDate"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="blue-label">Age Group</ion-label>
+        <ion-select [(ngModel)]="registration.ageGroup" name="ageGroup" id="ageGroup" formControlName="ageGroup" placeholder="(required)">
+          <ion-option *ngFor="let item of ageGroupData" value="{{item.ageGroup}}">
+            {{item.ageGroup}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+<!--       <ion-item no-lines>
+        <ion-label class="blue-label">Preferred Playing Position</ion-label>
+      </ion-item> -->
+      <ion-item>
+      <ion-label class="blue-label">Preferred Playing Position</ion-label>
+        <ion-select [(ngModel)]="registration.preferredPlayingPosition" name="preferredPlayingPosition" id="preferredPlayingPosition"
+          formControlName="preferredPlayingPosition" placeholder="(required)">
+          <ion-option value=1>#1 : Goal Keeper</ion-option>
+          <ion-option value=2>#2 : Defence </ion-option>
+          <ion-option value=3>#3 : Defence </ion-option>
+          <ion-option value=4>#4 : Defence </ion-option>
+          <ion-option value=5>#5 : Defence </ion-option>
+          <ion-option value=6>#6 : Midfield </ion-option>
+          <ion-option value=7>#7 : Attack</ion-option>
+          <ion-option value=8>#8 : Midfield </ion-option>
+          <ion-option value=9>#9 : Attack </ion-option>
+          <ion-option value=10>#10 : Midfield</ion-option>
+          <ion-option value=11>#11 : Attack</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="blue-label">Gender</ion-label>
+        <ion-select [(ngModel)]="registration.gender" type="text" name="gender" id="gender" formControlName="gender" placeholder="(required)">
+          <ion-option value="male" checked="true">Male</ion-option>
+          <ion-option value="female">Female</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item-divider color="light">Objectives</ion-item-divider>
+      <ion-item text-wrap>
+        <ion-textarea rows="5" [(ngModel)]="registration.objectivesAmbitions" id="objectivesAmbitions" name="objectivesAmbitions"
+          formControlName="objectivesAmbitions"></ion-textarea>
+      </ion-item>
+
+      <ion-item-divider color="light">{{registration.playerName}} Contact Details</ion-item-divider>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Address</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.residentialAddress" type="text" id="residentialAddress" name="residentialAddress" formControlName="residentialAddress"
+          placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="blue-label">Home Phone</ion-label>
+        <ion-input [(ngModel)]="registration.homeNumber" type="text" id="homeNumber" name="homeNumber" formControlName="homeNumber"
+          placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="blue-label">Mobile</ion-label>
+        <ion-input [(ngModel)]="registration.mobileNumber" type="text" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber"
+          placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">E-Mail</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.email" type="email" id="email" name="email" formControlName="emailAddress" placeholder="(required)"></ion-input>
+      </ion-item>
+
+      <ion-item-divider color="light">Contact - 1</ion-item-divider>
+      <ion-item>
+        <ion-label class="blue-label">Name</ion-label>
+        <ion-input [(ngModel)]="registration.contact1_personName" type="text" id="contact1_personName" name="contact1_personName"
+          formControlName="contact1_personName" placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="blue-label">Relationship</ion-label>
+        <ion-input [(ngModel)]="registration.contact1_relationship" type="text" id="contact1_relationship" name="contact1_relationship"
+          formControlName="contact1_relationship" placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="blue-label">Phone</ion-label>
+        <ion-input [(ngModel)]="registration.contact1_contactNumber" type="text" id="contact1_contactNumber" name="contact1_contactNumber"
+          formControlName="contact1_contactNumber" placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">E-Mail</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.contact1_email" type="email" id="contact1_email" name="contact1_email" formControlName="contact1_email"
+          placeholder="(required)"></ion-input>
+      </ion-item>
+
+      <ion-item-divider color="light">Contact - 2</ion-item-divider>
+      <ion-item>
+        <ion-label class="blue-label">Name</ion-label>
+        <ion-input [(ngModel)]="registration.contact2_personName" type="text" id="contact2_personName" name="contact2_personName"
+          formControlName="contact2_personName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="blue-label">Relationship</ion-label>
+        <ion-input [(ngModel)]="registration.contact2_relationship" type="text" id="contact2_relationship" name="contact2_relationship"
+          formControlName="contact2_relationship"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="blue-label">Phone</ion-label>
+        <ion-input [(ngModel)]="registration.contact2_contactNumber" type="text" id="contact2_contactNumber" name="contact2_contactNumber"
+          formControlName="contact2_contactNumber"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">E-Mail</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.contact2_email" type="email" id="contact2_email" name="contact2_email" formControlName="contact2_email"></ion-input>
+      </ion-item>
+
+      <ion-item-divider color="light">Study and Work Details</ion-item-divider>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Details of School</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-textarea rows="4" [(ngModel)]="registration.schoolDetails" id="schoolDetails" name="schoolDetails" formControlName="schoolDetails"></ion-textarea>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Details of Employment</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-textarea rows="4" [(ngModel)]="registration.employementDetails" id="employementDetails" name="employementDetails" formControlName="employementDetails"></ion-textarea>
+      </ion-item>
+
+      <ion-item-divider color="light">Playing History</ion-item-divider>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Previous Club (2016)</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.previousClub2016" type="text" id="previousClub2016" name="previousClub2016" formControlName="previousClub2016"
+          placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Previous Club (2015)</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.previousClub2015" type="text" id="previousClub2015" name="previousClub2015" formControlName="previousClub2015"
+          placeholder="(required)"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Current Suspensions</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-textarea rows="4" [(ngModel)]="registration.suspensionsDetails" id="suspensionsDetails" name="suspensionsDetails" formControlName="suspensionsDetails"
+          placeholder="(required)"></ion-textarea>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Injuries</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-textarea rows="4" [(ngModel)]="registration.injuriesDetails" id="injuriesDetails" name="injuriesDetails" formControlName="injuriesDetails"
+          placeholder="(required)"></ion-textarea>
+      </ion-item>
+
+      <ion-item-divider color="light">Football Academy or Trainer Details (if applicable)</ion-item-divider>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Head Coach Name</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.headCoachName" type="text" id="headCoachName" name="headCoachName" formControlName="headCoachName"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Contact Phone & Email</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.contactDetails" type="text" id="contactDetails" name="contactDetails" formControlName="contactDetails"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="blue-label"># Sessions per Week</ion-label>
+        <ion-input [(ngModel)]="registration.academicSessionPerWeekCount" type="text" id="academicSessionPerWeekCount" name="academicSessionPerWeekCount"
+          formControlName="academicSessionPerWeekCount"></ion-input>
+      </ion-item>
+
+      <ion-item-divider color="light">Details of Football Trips (if any)</ion-item-divider>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Arranged by</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.arrangedBy" type="text" id="arrangedBy" name="arrangedBy" formControlName="arrangedBy"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Destination</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-input [(ngModel)]="registration.destination" type="text" id="destination" name="destination" formControlName="destination"></ion-input>
+      </ion-item>
+      <ion-item no-lines>
+        <ion-label class="blue-label">Purpose of Trip</ion-label>
+      </ion-item>
+      <ion-item text-wrap>
+        <ion-textarea rows="4" [(ngModel)]="registration.purposeOfTrip" id="purposeOfTrip" name="purposeOfTrip" formControlName="purposeOfTrip"></ion-textarea>
+      </ion-item>
+    </ion-list>
+    <!--<button ion-button type="button" block (click)="AssessToCoach()">Assess</button>-->
+    <button ion-button type="submit" (click)="RegistrationSubmit()" [disabled]="!registrationForm.valid" block>Submit</button>
+    <!--<button ion-button type="submit" (click)="PlayerSubmit()" [disabled]="!(registrationForm.valid && registration.coaches.length > 0)" block>Convert to Player</button>-->
+    <button ion-button type="submit" (click)="PlayerSubmit()" [disabled]="!registrationForm.valid" block>Convert to Player</button>
+  </form>
+</ion-content>
