@@ -1,3 +1,26 @@
+IMP source
+
+Input Mask
+--
+https://github.com/RobinHerbots/Inputmask
+Example and download : http://robinherbots.github.io/Inputmask/
+JS : <script src="https://rawgit.com/RobinHerbots/Inputmask/4.x/dist/jquery.inputmask.bundle.js"></script>
+
+Example code
+<input class="money" type="text" />   
+ $(".money").blur(function () {
+            //alert($(this).inputmask('unmaskedvalue'));
+            alert($(this).val());
+        });
+        $(".money").inputmask("currency", {
+            'autoUnmask' : true
+            //onUnMask: function (maskedValue, unmaskedValue) {
+            //    //do something with the value
+            //    alert(maskedValue);
+            //}
+        });
+
+
 Gofer Pro App
 =
 > This documented is updated 23 October 2016 - Version 0.0.1 of Gofer Pro
