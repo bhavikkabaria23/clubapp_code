@@ -3,10 +3,14 @@ IMP source
 Input Mask
 --
 https://github.com/RobinHerbots/Inputmask
+
 Example and download : http://robinherbots.github.io/Inputmask/
+
 JS : <script src="https://rawgit.com/RobinHerbots/Inputmask/4.x/dist/jquery.inputmask.bundle.js"></script>
 
 Example code
+
+```bash
 <input class="money" type="text" />   
  $(".money").blur(function () {
             //alert($(this).inputmask('unmaskedvalue'));
@@ -19,7 +23,7 @@ Example code
             //    alert(maskedValue);
             //}
         });
-
+```
 
 Gofer Pro App
 =
