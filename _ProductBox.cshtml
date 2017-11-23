@@ -1,0 +1,126 @@
+﻿@model ProductOverviewModel
+@using System.Globalization
+@using Nop.Core
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Services.Catalog
+@using Nop.Services.Orders
+@using Nop.Web.Models.Catalog;
+@using ShopFast.Plugin.BD.CrowdPay.Services.Interfaces
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+    var quantity = 1;
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+
+    var orderService = EngineContext.Current.Resolve<ICustomOrderService>();
+    var productService = EngineContext.Current.Resolve<IProductService>();
+    var priceFormatter = EngineContext.Current.Resolve<IPriceFormatter>();
+    var _taxService = EngineContext.Current.Resolve<Nop.Services.Tax.ITaxService>();
+    var _priceCalculationService = EngineContext.Current.Resolve<IPriceCalculationService>();
+    var _workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var _currencyService = EngineContext.Current.Resolve<Nop.Services.Directory.ICurrencyService>();
+
+
+    var productEntity = productService.GetProductById(Model.Id);
+    var productPaidedQ = orderService.GetAllOrderItems(null, null, null, null, null, null, null).Where(x => x.ProductId == Model.Id).Sum(x => x.Quantity);
+    var investorCount = orderService.GetAllOrderItems(null, null, null, null, null, null, null).Where(x => x.ProductId == Model.Id).ToList().GroupBy(x => x.Order.CustomerId).Select(x => x.Key).Count();
+
+    var totalGoal = (productEntity.StockQuantity * Model.ProductPrice.PriceValue) + (productPaidedQ * Model.ProductPrice.PriceValue);
+    var currentlyValue = (productPaidedQ * Model.ProductPrice.PriceValue);
+    var currentlValueInPercents = (currentlyValue * 100) / totalGoal;
+
+    decimal taxRate;
+    decimal finalPriceWithoutDiscountBase = _taxService.GetProductPrice(productEntity, _priceCalculationService.GetFinalPrice(productEntity, _workContext.CurrentCustomer, includeDiscounts: false), out taxRate);
+    decimal finalPriceWithoutDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
+    decimal PerShare = finalPriceWithoutDiscount;
+
+    var offeringDaysLeft = 0;
+    DateTime? availableStartDateTimeUtc, availableEndDateTimeUtc;
+    availableStartDateTimeUtc = productEntity.AvailableStartDateTimeUtc;
+    availableEndDateTimeUtc = productEntity.AvailableEndDateTimeUtc;
+    if (availableStartDateTimeUtc.HasValue && availableEndDateTimeUtc.HasValue)
+    {
+        offeringDaysLeft = (availableEndDateTimeUtc - DateTime.UtcNow).Value.Days + 1;
+    }
+
+    var purchaseModel = ShopFast.Plugin.BD.CrowdPay.Controllers.CrowdPayInvestmentController.GetInvestmentModel(Model.Id);
+
+    var investmentAttributes = ShopFast.Plugin.BD.CrowdPay.Controllers.CrowdPayInvestmentController.GetInvestmentAttributesByPage("detail", Model.Id);
+}
+
+<div class="product-item" data-productid="@Model.Id">
+    <div class="picture">
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
+        </a>
+    </div>
+
+    <div class="details">
+        <h2 class="product-title">
+            <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name
+        </h2>
+        @if (EngineContext.Current.Resolve<CatalogSettings>().ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+        {
+            <div class="sku">
+                @Model.Sku
+            </div>
+        }
+        <div class="description">
+            @Html.Raw(Model.ShortDescription)
+        </div>
+        <div class="add-info">
+            @Html.Widget("productbox_addinfo_before", Model.Id)
+            <div class="crowd-fondue-block">
+                <div class="crowd-field">
+                    <div class="newprogress-container">
+                        <div class="newp2">
+                            <div class="pbar"><div id="myBar" class="progressbar" title="@currentlValueInPercents%" style="width: @currentlValueInPercents%"></div>  </div>
+                        </div>
+                    </div>
+                </div>
+                @if (investmentAttributes.ShowRaised)
+                {
+                    <div class="block4">
+                        <div class="crowd-field">
+                            <div class="newcrowd-field-info-value">@priceFormatter.FormatPrice(@currentlyValue).Replace(".00", string.Empty)</div>
+                            <div class="newcrowd-investor-info-title">@T("ShopFast.CrowdPay.Committed")</div>
+                        </div>
+                    </div>
+                }
+                @if (investmentAttributes.ShowInvestors)
+                {
+                    <div class="block4">
+                        <div class="crowd-field">
+                            <div class="newcrowd-field-info-value">@investorCount</div>
+                            <div class="newcrowd-investor-info-title">@T("ShopFast.CrowdPay.Investors")</div>
+                        </div>
+                    </div>
+                }
+                @if (investmentAttributes.ShowDaysLeft)
+                {
+                    <div class="block4">
+                        <div class="crowd-field">
+                            <div class="newcrowd-field-info-value">@offeringDaysLeft</div>
+                        </div>
+                        <div class="newcrowd-investor-info-title">@T("ShopFast.CrowdPay.OfferingDaysLeft")</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    </a>
+</div>
