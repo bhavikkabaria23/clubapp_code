@@ -1,0 +1,100 @@
+https://stackoverflow.com/questions/19743718/how-to-create-dynamic-radio-buttons-in-mvc-razor
+http://www.tutorialsteacher.com/mvc/htmlhelper-radiobutton-radiobuttonfor
+http://www.c-sharpcorner.com/UploadFile/4d9083/binding-radiobutton-and-radiobuttonlist-in-various-way-in-mv201/
+
+@model MVCTest.Models.CRMModel
+@{
+    int start = 0;
+    int end = 0;
+}
+
+@helper RenderControls(List<MVCTest.Models.ControlField> ControlFieldList, int step,int start, int end)
+{
+    for (int i = start-1; i < end; i++)
+    {
+        @Html.HiddenFor(m => ControlFieldList[i].Type)
+        @Html.HiddenFor(m => ControlFieldList[i].CRMField)
+        <div class="form-group">
+            <label>@ControlFieldList[i].Label</label>
+            <br />
+            @if (ControlFieldList[i].Type == MVCTest.Models.ControlType.Textbox)
+            {
+                @Html.TextBoxFor(m => ControlFieldList[i].FieldValue)
+            }
+            else if (ControlFieldList[i].Type == MVCTest.Models.ControlType.Textarea)
+            {
+                @Html.TextAreaFor(m => ControlFieldList[i].FieldValue)
+            }
+            else if (ControlFieldList[i].Type == MVCTest.Models.ControlType.Checkbox)
+            {
+                for (int op = 0; op < ControlFieldList[i].ControlOptionList.Count(); op++)
+                {
+                    @Html.CheckBoxFor(m => ControlFieldList[i].ControlOptionList[op].OptionValue)
+                    <label>@ControlFieldList[i].ControlOptionList[op].Label</label>
+                    <br />
+                }
+            }
+            else if (ControlFieldList[i].Type == MVCTest.Models.ControlType.Radio)
+            {
+                for (int op = 0; op < ControlFieldList[i].ControlOptionList.Count(); op++)
+                {
+                    @*@Html.HiddenFor(m => ControlFieldList[i].ControlOptionList[op])*@
+                    @*@Html.RadioButtonFor(m => ControlFieldList[i].ControlOptionList[op], ControlFieldList[i].ControlOptionList[op].Label, new { @Name = ControlFieldList[i].ControlOptionList })*@
+                    @Html.RadioButtonFor(m => ControlFieldList[i].ControlOptionList[op], ControlFieldList[i].ControlOptionList[op].Label)
+                    <label>@ControlFieldList[i].ControlOptionList[op].Label</label>
+                    <br />
+                }
+            }
+            else if (ControlFieldList[i].Type == MVCTest.Models.ControlType.Dropdown)
+            {
+                @Html.DropDownListFor(m => ControlFieldList[i].FieldValue, new SelectList(ControlFieldList[i].DropdownItemsList, "Value", "Text"))
+            }
+        </div>
+    }
+    if (step > 1)
+    {
+        <input id="btnBackt_@step" class="btnBack" data-btnstep="@(step-1)" type="button" value="Back" />
+    }
+    <input id="btnNext_@step" class="btnBack" data-btnstep="@(step+1)" type="button" value="Next" />
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>CRMModel</h4>
+        <hr />
+
+        @for (int s = 1; s <= Model.Steps; s++)
+        {
+            start = end+1;
+            end = end + Model.ControlFieldList.Count(c => c.Step == s);
+            <div style="background-color:lightgray; display:none;" id="div-step_@s" class="div-step" data-step="@s">
+                @RenderControls(Model.ControlFieldList, s,start,end)
+            </div>
+            <br />
+            <br />
+        }
+        <div style="background-color:lightgray; display:none;" id="div-step_@(Model.Steps+1)" class="div-step" data-step="@(Model.Steps+1)">
+            Confirmation details
+            <input id="btnBackt_@(Model.Steps+1)" class="btnBack" data-btnstep="@(Model.Steps)" type="button" value="Back" />
+            <input id="btnSubmit" type="submit" value="Submit" />
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    
+    $(document).ready(function () {
+        $("#div-step_1").show();
+        $(".btnBack,.btnNext").click(function () {
+            $(".div-step").hide();
+            $("#div-step_" + $(this).data("btnstep")).show();
+        });
+        //​$(".btnNext").click(function() {
+        //    $(".div-step").hide();
+        //    $("#div-step_"+$(this).data("btnstep")).show();
+        //});
+    });
+</script>
+
