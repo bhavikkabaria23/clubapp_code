@@ -1,0 +1,15 @@
+http://crm.shopfast.com
+Bhavik
+Kabar$a123
+
+the second one set under projects http://crm.shopfast.com/index.php?module=Project&view=List&app=PROJECT
+
+the free trial set up in http://crm.shopfast.com/index.php?module=Leads&view=List&app=MARKETING
+
+Reference
+https://wiki.vtiger.com/index.php/Webservices_tutorials#Update_Example
+http://community.vtiger.com/help/vtigercrm/developers/third-party-app-integration.html#retrieve-operation
+
+
+https://bhavikshop1.myshopify.com/admin/apps/394e63dd27aac4b5595cba3982dc8322/services_marketplace?hmac=8f1273701867d4b50a369e17cc0a1eeafb71d2c95def54c0fe7df05c13f368a7&locale=en&protocol=https%3A%2F%2F&shop=bhavikshop1.myshopify.com&timestamp=1526405816
+
