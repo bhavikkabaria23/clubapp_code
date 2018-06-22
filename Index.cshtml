@@ -1,0 +1,364 @@
+﻿@using Shopfast.Plugin.IssuerDocForm.Models;
+@model Shopfast.Plugin.IssuerDocForm.Models.IssuerDocFormModel
+@{
+    ViewBag.Title = "Index";
+    int start = 0;
+    int end = -1;
+}
+<style>
+    .loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    display:none;
+}
+
+@@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+@helper RenderControls(List<QuestionsModel> questions, int start, int end)
+{
+for (int i = start; i <= end; i++)
+{
+        <div class="field">
+            <div class="applicable-title">@questions[i].Name</div>
+            <div class="applicable-dropdown">
+                @Html.DropDownListFor(m => questions[i].ApplicableValue, new SelectList(questions[i].ApplicableList, "Value", "Text", questions[i].ApplicableValue), "Select", new { @class = "applcable-select required-field" })
+                @*<select class="applcable-select">
+                        <option value="0">Select </option>
+                        <option value="1">
+                            Applicable
+                        </option>
+                        <option value="2"> Not Applicable</option>
+                    </select>*@
+                <div></div>
+            </div>
+            <div class="upload-item">
+                @Html.HiddenFor(m => questions[i].Control.ControlId)
+                @*@Html.HiddenFor(m => questions[i].Control.QuestinoId)
+                    @Html.HiddenFor(m => questions[i].Control.IsRequired)
+                    @Html.HiddenFor(m => questions[i].Control.CRMField)*@
+                @Html.HiddenFor(m => questions[i].Control.Type)
+                @Html.HiddenFor(m => questions[i].QuestionId)
+                @if (questions[i].Control.Type == Convert.ToInt32(ControlType.Textbox))
+                {
+                    @Html.TextBoxFor(m => questions[i].Control.Value, new { @class = "form-control" })
+                }
+                else if (questions[i].Control.Type == Convert.ToInt32(ControlType.Textarea))
+                {
+                    @Html.TextAreaFor(m => questions[i].Control.Value, new { @class = "form-control" })
+                }
+                else if (questions[i].Control.Type == Convert.ToInt32(ControlType.Checkbox))
+                {
+                    for (int op = 0; op < questions[i].Control.ControlItems.Count(); op++)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                @Html.HiddenFor(m => questions[i].Control.ControlItems[op].Text)
+                                @Html.CheckBoxFor(m => questions[i].Control.ControlItems[op].Value)
+                                @questions[i].Control.ControlItems[op].Text
+                            </label>
+                        </div>
+                    }
+                }
+                else if (questions[i].Control.Type == Convert.ToInt32(ControlType.Radio))
+                {
+                    for (int op = 0; op < questions[i].Control.ControlItems.Count(); op++)
+                    {
+                        <div class="radio">
+                            <label>
+                                @Html.RadioButtonFor(m => questions[i].Control.Value, questions[i].Control.ControlItems[op].Text)
+                                @questions[i].Control.ControlItems[op].Text
+                            </label>
+                        </div>
+                    }
+                }
+                else if (questions[i].Control.Type == Convert.ToInt32(ControlType.Picklist))
+                {
+                    @Html.DropDownListFor(m => questions[i].Control.Value, new SelectList(questions[i].Control.ControlItems, "Text", "Text"), "Select", new { @class = "form-control" })
+                }
+                else if (questions[i].Control.Type == Convert.ToInt32(ControlType.Upload))
+                {
+
+                    <div class="upload-button fileupload">
+                        @Html.TextBoxFor(m => questions[i].Control.file, new { @type = "file", @class = "upload" })
+                        <a href="#" class="upload-link">Upload</a>
+                        <i id="iconAdd" style="float:right;">+</i>
+                        <i class="iconRight" style="display:none">✓</i>
+                        <span class="spanFileName"></span>
+                    </div>
+
+                    <div class="upload-button fileupload" style="display:none;">
+                        @Html.TextBoxFor(m => questions[i].Control.file, new { @type = "file", @class = "upload" })
+                        <a href="" class="upload-link">Upload</a>
+                        <i class="iconRight" style="display:none">✓</i>
+                        <i class="iconDelete">✖</i>
+                        <span class="spanFileName"></span>
+                    </div>
+
+                    <div class="upload-button fileupload" style="display:none;">
+                        @Html.TextBoxFor(m => questions[i].Control.file, new { @type = "file", @class = "upload" })
+                        <a href="" class="upload-link">upload</a>
+                        <i class="iconRight" style="display:none">✓</i>
+                        <i class="iconDelete">✖</i>
+                        <span class="spanFileName"></span>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="upload-button">
+                        @Html.TextBoxFor(m => questions[i].Control.file, new { @type = "file", @class = "upload" })
+                        @*<input type="file" class="upload">*@
+                        <a href="" class="upload-link">Upload</a>
+                    </div>
+                }
+            </div>
+        </div>
+}
+
+
+
+    <div class="loader"></div>
+
+}
+@using (Html.BeginForm("Index", "Issuer", FormMethod.Post, new { id = "sectional", enctype = "multipart/form-data" }))
+{
+    <div class="middle-section">
+        <div class="checklistform">
+            <div class="pagetitle">
+                <h2>Due diligence checklest</h2>
+            </div>
+            <div class="pageinside">
+                <div class="head-row">
+                    <div class="head-col1">Please check of each item or initial if not applicable.</div>
+                    <div class="head-col2">Not Applicable</div>
+                    <div class="head-col3">Enclosed</div>
+                </div>
+
+                @for (int s = 0; s < Model.Sections.Count(); s++)
+                {
+                    start = end + 1;
+                    end = end + Model.Questions.Count(q => q.SectionId == Model.Sections[s].Id);
+                    <fieldset class="fieldset">
+                        <legend>1. @Model.Sections[s].Name</legend>
+                        <div class="form-section">
+
+                            @RenderControls(Model.Questions.ToList(), start, end)
+                            @*@for (int i = 0; i < Model.Questions.Where(q => q.SectionId == @Model.Sections[s].Id).Count(); i++)
+                                {
+                                    <div class="field">
+                                        <div class="applicable-title">@que.Name</div>
+                                        <div class="applicable-dropdown">
+                                            <select class="applcable-select">
+                                                <option value="0">Select </option>
+                                                <option value="1">
+                                                    Applicable
+                                                </option>
+                                                <option value="2"> Not Applicable</option>
+                                            </select>
+                                            <div></div>
+                                        </div>
+                                        <div class="upload-item">
+                                            @RenderControls(Model.Questions.FirstOrDefault(q => q.QuestionId == que.QuestionId).Control)
+                                        </div>
+                                    </div>
+                                }*@
+
+
+                            <div class="form-section-nav">
+                                <a class="btn-std form-nav-prev">Prev</a>
+                                <a class="btn-std form-nav-next disableButton">Next</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <input type="submit" value="submit" id="btnSubmit" name="btnSubmit" />
+}
+<style>
+    input[type=checkbox] {
+        width: 16px;
+        height: 16px;
+    }
+
+    .field-error {
+        border: 1px solid red;
+    }
+</style>
+
+
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/Content/css/main.css">
+@*<script src="~/Scripts/jquery-1.8.2.min.js"></script>*@
+<script src="~/Scripts/jquery-3.1.0.min.js"></script>
+<script src="/Content/js/formalize.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sectional').formalize({
+            timing: 300,
+            nextCallBack: function () {
+                if (validateEmpty($('#sectional .open'))) {
+                    scrollToNewSection($('#sectional .open'));
+                    return true;
+                };
+                return false;
+            },
+            prevCallBack: function () {
+                return scrollToNewSection($('#sectional .open').prev())
+            }
+        });
+        //$('#global').formalize({
+        //    navType: 'global',
+        //    prevNav: '#global-nav-prev',
+        //    nextNav: '#global-nav-next',
+        //    timing: 300,
+        //    nextCallBack: function () {
+        //        return validateEmpty($('#global .open'));
+        //    }
+        //});
+
+        //$('#btn-global').on('click', function () {
+        //    $('#btn-sectional').removeClass('disabled');
+        //    $(this).addClass('disabled');
+        //    $('#sectional').hide();
+        //    $('#global').show();
+        //});
+
+        //$('#btn-sectional').on('click', function () {
+        //    $('#btn-global').removeClass('disabled');
+        //    $(this).addClass('disabled');
+        //    $('#global').hide();
+        //    $('#sectional').show();
+        //});
+
+        $('input').on('keyup change', function () {
+            $(this).closest($('.valid')).removeClass('valid');
+        });
+
+        function validateEmpty(section) {
+            var errors = 0;
+            section.find($('.required-field')).each(function () {
+
+                var $this = $(this);
+                //input = $this.find($('input'));
+                if ($this.val() === "") {
+                    errors++;
+                    $this.addClass('field-error');
+                    //$this.after('\<div class="form-error-msg">This field is required!\</div>');
+                }
+                else {
+                    $this.removeClass('field-error');
+                }
+            });
+            if (errors > 0) {
+                section.removeClass('valid');
+                return false;
+            }
+            //section.find($('.field-error')).each(function () {
+            //    $(this).removeClass('field-error');
+            //});
+            //section.find($('.form-error-msg')).each(function () {
+            //    $(this).remove();
+            //});
+            //section.addClass('valid');
+            return true;
+        }     
+
+        function scrollToNewSection(section) {
+            var top = section.offset().top;
+            $("html, body").animate({
+                scrollTop:
+                top
+            }, '200');
+            return true;
+        }
+    });
+
+    /*********************************/
+    function validateNextButton() {
+        var section = $("#sectional .open");
+        var errors = 0;
+        section.find($('.required-field')).each(function () {
+
+            var $this = $(this);
+            if ($this.val() === "") {
+                errors++;
+            }
+            else {
+                $this.removeClass('field-error');
+            }
+        });
+        if (errors > 0) {
+            section.find(".form-nav-next").addClass('disableButton');
+        }
+        else {
+            section.find(".form-nav-next").removeClass('disableButton');
+        }
+    }
+
+    $('.applcable-select').on('change', function () {
+        validateNextButton();
+        // if (this.value == '1'); { No semicolon and I used === instead of ==
+        if (this.value) {
+            $(this).removeClass('field-error');
+        }
+        if (this.value === '1') {
+            $(this).parent().next().addClass("showupload");
+        }
+        else {
+            $(this).parent().next().removeClass("showupload");
+        }
+    });
+
+
+
+
+    
+    $(document).ready(function () {        
+        $('input[type=file').change(function () {
+            $(this).siblings('.iconRight').show();
+            $(this).siblings('.spanFileName').html($(this).val().split('\\').pop());
+        });
+        $("#iconAdd").click(function () {
+            $('.fileupload:hidden').first().show();
+        });
+        $(".iconDelete").click(function () {
+            $(this).siblings('.iconRight').hide();
+            $(this).siblings('.spanFileName').html('');
+            var $el = $(this).siblings('input[type=file]');
+            $el.wrap('<form>').closest('form').get(0).reset();
+            $el.unwrap();
+            $(this).parent().hide();
+        });
+
+        validateNextButton();
+
+        $("#btnSubmit").click(function () {
+            $(".loader").show();
+        });
+
+        $('.fieldset').removeClass('open');
+        $(".form-section").hide();
+        $('.applcable-select').each(function () {
+            if(!$(this).val())
+            {
+                $(this).parents('.fieldset').addClass('open');
+                $(this).parents('.fieldset').find(".form-section").show();
+                return false;
+            }          
+        });
+    });
+</script>
