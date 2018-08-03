@@ -1,0 +1,12 @@
+int index = 3;
+model.countryId = Convert.ToInt32(model.ListCountry[index - 1].Value);
+
+==============================
+public int SelectedIndex { get; set; }
+
+@Html.HiddenFor(m => m.SelectedIndex)
+
+  $("#countryId").change(function () {
+                var i = $('#countryId option:selected').index();
+                $("#SelectedIndex").val(i);
+            });
